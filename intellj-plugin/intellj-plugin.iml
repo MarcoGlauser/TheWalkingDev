@@ -57,5 +57,14 @@
     <orderEntry type="library" name="joda-time:joda-time:2.9.4" level="project" />
     <orderEntry type="library" name="com.google.apis:google-api-services-fitness:v1-rev21-1.22.0" level="project" />
     <orderEntry type="library" name="com.github.sps.pushover.net:pushover-client:1.0.0" level="project" />
+    <orderEntry type="library" name="google-api-services-fitness-v1-rev22-1.22.0" level="project" />
+    <orderEntry type="library" name="joda-time-2.9.4" level="project" />
+    <orderEntry type="library" name="fitness" level="project" />
+    <orderEntry type="library" name="google-oauth-client-1.22.0" level="project" />
+    <orderEntry type="library" name="google-api-client-1.22.0" level="project" />
+    <orderEntry type="library" name="google-api-client-jackson2-1.22.0" level="project" />
+    <orderEntry type="library" name="google-http-client-1.22.0" level="project" />
+    <orderEntry type="library" name="google-http-client-jackson2-1.22.0" level="project" />
+    <orderEntry type="library" name="unirest-java-1.4.9" level="project" />
   </component>
 </module>

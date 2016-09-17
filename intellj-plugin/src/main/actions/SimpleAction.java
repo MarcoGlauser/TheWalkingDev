@@ -9,6 +9,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import net.pushover.client.PushoverClient;
 import net.pushover.client.PushoverException;
 import net.pushover.client.PushoverMessage;
@@ -65,9 +66,24 @@ public class SimpleAction extends AnAction {
                 public void run() {
                     Integer now = requestCreator.sendRequest();
                     System.out.println("Check again, got " + now);
-                    if ((now - initial) >= THREASHOLD) {
-                        SwingUtilities.invokeLater(() -> {
 
+                    Integer diff = now - initial;
+                    int userId = UserSettings.getUserId();
+                    if(userId == 0) {
+                        // TODO: get id by username
+                        // TODO: if doesnt exist: register user, save UserSettings, Log Steps
+                        userId = 1;
+                        UserSettings.setUserId(userId);
+                    }
+
+                    try {
+                        TheWalkingDevAPI.logSteps(userId, diff);
+                    } catch (UnirestException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (diff >= THREASHOLD) {
+                        SwingUtilities.invokeLater(() -> {
                             showMessage(statusBar, "Finished back, go back to to work. Be awesome.");
 
                             try {
