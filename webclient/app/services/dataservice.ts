@@ -9,10 +9,12 @@ export class DataService {
 
     private actionUrl: string;
     private headers: Headers;
+    private server: string;
 
     constructor(private _http: Http) {
 
-        this.actionUrl = 'http://localhost:8000/' + 'users/users/?format=json';
+        this.server = 'http://localhost:8000/'
+        this.actionUrl = this.server + 'users/users/?format=json';
 
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
@@ -25,7 +27,8 @@ export class DataService {
     }
 
     public GetSingle = (id: number): Observable<User> => {
-        return this._http.get(this.actionUrl + id)
+        let actionUrl = this.server + 'users/users/' + id + '/?format=json';
+        return this._http.get(actionUrl)
             .map((response: Response) => <User>response.json())
     }
 
