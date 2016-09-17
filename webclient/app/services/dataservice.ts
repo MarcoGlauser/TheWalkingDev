@@ -3,6 +3,7 @@ import { Http, Response, Headers } from '@angular/http';
 import 'rxjs/add/operator/map'
 import { Observable } from 'rxjs/Observable';
 import { User } from '../models/user';
+import { StepDiff } from '../models/step_diff';
 
 @Injectable()
 export class DataService {
@@ -23,13 +24,20 @@ export class DataService {
 
     public GetAll = (): Observable<User[]> => {
         return this._http.get(this.actionUrl)
-            .map((response: Response) => <User[]>response.json().results)
+            .map((response: Response) => <User[]> response.json().results)
     }
 
     public GetSingle = (id: number): Observable<User> => {
         let actionUrl = this.server + 'users/users/' + id + '/?format=json';
         return this._http.get(actionUrl)
-            .map((response: Response) => <User>response.json())
+            .map((response: Response) => <User> response.json())
+    }
+
+    public GetLiveStepDiffs = (): Observable<StepDiff[]> => {
+        let fiveMinutes = Math.floor(Date.now()/1000) - 60*5;
+        let actionUrl = this.server + 'datapoints/step_diffs/?format=json&created_at_gte='+fiveMinutes;
+        return this._http.get(actionUrl)
+            .map((response: Response) => <StepDiff[]> response.json().results)
     }
 
     private handleError(error: Response) {
