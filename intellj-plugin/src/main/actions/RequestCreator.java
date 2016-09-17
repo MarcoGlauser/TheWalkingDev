@@ -1,4 +1,4 @@
-package org.jetbrains.tutorials.actions;
+package main.actions;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -33,7 +33,7 @@ public class RequestCreator {
     }
 
     private Integer careless() throws IOException {
-        DateTime startTime = DateTime.now();
+        DateTime startTime = DateTime.now().minusDays(1);
         DateTime endTime = DateTime.now().plusDays(1);
         Fitness.Users.Dataset.Aggregate aggregate = service.users().dataset().aggregate(
             "me",
@@ -42,8 +42,7 @@ public class RequestCreator {
                 .setEndTimeMillis(endTime.getMillis())
                 .setAggregateBy(Collections.singletonList(
                     new AggregateBy()
-                        .setDataSourceId("dataSourceId")
-                        .setDataTypeName("derived:com.google.step_count.delta:com.google.android.gms:estimated_steps")
+                        .setDataSourceId("derived:com.google.step_count.delta:com.google.android.gms:estimated_steps")
                 ))
                 .setBucketByTime(
                     new BucketByTime()
@@ -66,17 +65,17 @@ public class RequestCreator {
             );
 
         Credential applicationDefault = builder.build();
-        applicationDefault.setRefreshToken("NOi4AoGhMrrzEXBxM22vmDOm54fSgk67MtOusWQhiw8");
-        applicationDefault.setAccessToken("ya29.Ci9gA-Z7xI-MFfRoXPwqze-BoroUA7Mp4B8fgli9788W-avzo-XOW7BXJ5Fl8qwWag");
-
+        applicationDefault.setRefreshToken("1/euFLuBrzRGNWux7-Q1MXRQH5i0IZEhRrQLWJZM1Z9X8");
+        applicationDefault.setAccessToken("ya29.Ci9hA3T5p6KmzE99BBKWMnR5HYp36EDjUoD8xWklaRMVk7gMQh7DJRUg3pelyUWFUg");
 
         return new Fitness.Builder(
             Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), applicationDefault)
-            .setApplicationName("953621258938-jd68gcvpihti7m4kl0c2u40u5lt2e2hk.apps.googleusercontent.com")
+            .setApplicationName("953621258938-te4scnmnukcj23m778hq2p2bhsbrf74t.apps.googleusercontent.com")
             .build();
     }
 
     private static Integer getValueOrNul(AggregateResponse response) {
+        System.out.println(response);
         for (AggregateBucket aggregateBucket : response.getBucket()) {
             for (Dataset dataset : aggregateBucket.getDataset()) {
                 for (DataPoint dataPoint : dataset.getPoint()) {
@@ -86,6 +85,11 @@ public class RequestCreator {
                 }
             }
         }
-        return null;
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        // Integer integer = new RequestCreator().sendRequest();
+        // System.out.println(integer);
     }
 }

@@ -1,4 +1,4 @@
-package org.jetbrains.tutorials.actions;
+package main.actions;
 
 import javax.swing.*;
 import java.awt.*;
