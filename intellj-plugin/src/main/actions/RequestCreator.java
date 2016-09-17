@@ -1,6 +1,7 @@
 package main.actions;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.RefreshTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.util.Utils;
 import com.google.api.client.http.apache.ApacheHttpTransport;
@@ -65,8 +66,13 @@ public class RequestCreator {
             );
 
         Credential applicationDefault = builder.build();
-        applicationDefault.setAccessToken("1/21pYiZJ0H4nimhL1pL-R1dyOGhGv_eq3E4Fngq2LdAg");
-        applicationDefault.setRefreshToken("ya29.Ci9hA-EtOfdi3VaHyXqO05Q43oCBLTcuf2StoUAgVSTC4MTa4IaFMDHCYTqVc9YmyA");
+        applicationDefault.setRefreshToken("ya29.Ci9hA5XX4BUAdWM3fKjZM1FSNywvCiCDiCH_RSF6fYeCMbHRWp1Q-lCxSKbBovSqgg");
+
+        try {
+            applicationDefault.refreshToken();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return new Fitness.Builder(Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), applicationDefault)
             .setApplicationName("ItelliJ-Tool")
