@@ -1,3 +1,4 @@
+from datapoint.filters import StepDiffFilter
 from datapoint.models import StepDiff
 from datapoint.serializers import StepDiffSerializer
 from rest_framework import viewsets
@@ -9,3 +10,4 @@ class StepDiffViewSet(viewsets.ModelViewSet):
     """
     queryset = StepDiff.objects.all()
     serializer_class = StepDiffSerializer
+    filter_class = StepDiffFilter
