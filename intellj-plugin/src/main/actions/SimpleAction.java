@@ -10,6 +10,7 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,18 +23,14 @@ import java.util.concurrent.TimeUnit;
  * @author Kirusanth Poopalasingam ( pkirusanth@gmail.com )
  */
 public class SimpleAction extends AnAction {
-
-
     ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     private int THREASHOLD = 10;
 
     @Override
     public void actionPerformed(AnActionEvent actionEvent) {
-
         System.out.println("actionPerformed");
 
-        StatusBar statusBar = WindowManager.getInstance()
-            .getStatusBar(DataKeys.PROJECT.getData(actionEvent.getDataContext()));
+        StatusBar statusBar = WindowManager.getInstance().getStatusBar(DataKeys.PROJECT.getData(actionEvent.getDataContext()));
 
         showMessage(statusBar, "Take a break in 10s");
 
@@ -41,7 +38,6 @@ public class SimpleAction extends AnAction {
             System.out.println("After 10s");
 
             JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself");
-
             JFrame yourFrame = new JFrame();
             yourFrame.setLayout(new GridBagLayout());
             yourFrame.add(label);
@@ -49,38 +45,30 @@ public class SimpleAction extends AnAction {
             yourFrame.setSize(500, 500);
             yourFrame.setResizable(false);
             centreWindow(yourFrame);
-            ;
 
-            // new WindowsSecurity(yourFrame);
             RequestCreator requestCreator = new RequestCreator();
             System.out.println("Created RequestCreator()");
             Integer initial = requestCreator.sendRequest();
             System.out.println("Initial, got" + initial);
+
+            int userId = TheWalkingDevAPI.getUserByName("tim").getInt("id");
 
             exec.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
                     Integer now = requestCreator.sendRequest();
                     System.out.println("Check again, got " + now);
-
                     Integer diff = now - initial;
-                    int userId = UserSettings.getUserId();
-                    if(userId == 0) {
-                        // TODO: get id by username
-                        // TODO: if doesnt exist: register user, save UserSettings, Log Steps
-                        userId = 1;
-                        UserSettings.setUserId(userId);
-                    }
-
-                    try {
-                        TheWalkingDevAPI.logSteps(userId, diff);
-                    } catch (UnirestException e) {
-                        e.printStackTrace();
+                    if (diff > 0) {
+                        try {
+                            TheWalkingDevAPI.logSteps(userId, diff);
+                        } catch (UnirestException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     if (diff >= THREASHOLD) {
                         SwingUtilities.invokeLater(() -> {
-
                             showMessage(statusBar, "Finished back, go back to to work. Be awesome.");
                         });
                     }
@@ -91,7 +79,6 @@ public class SimpleAction extends AnAction {
             yourFrame.setVisible(true);
             yourFrame.setUndecorated(true);
             yourFrame.toFront();
-            ;
             return null;
         };
 
