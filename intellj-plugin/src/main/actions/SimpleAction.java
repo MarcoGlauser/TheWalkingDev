@@ -26,7 +26,7 @@ public class SimpleAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent actionEvent) {
-        TrackerSchedular.schedule(new Tracker(), 0, TimeUnit.HOURS);
+        TrackerSchedular.schedule(new Tracker(), 1, TimeUnit.SECONDS);
     }
 
     private void showMessage(StatusBar statusBar, String s) {

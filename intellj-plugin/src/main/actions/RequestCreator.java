@@ -66,7 +66,7 @@ public class RequestCreator {
             );
 
         Credential applicationDefault = builder.build();
-        applicationDefault.setRefreshToken("ya29.Ci9hA5XX4BUAdWM3fKjZM1FSNywvCiCDiCH_RSF6fYeCMbHRWp1Q-lCxSKbBovSqgg");
+        applicationDefault.setRefreshToken("1/ocvAqbXjm-dnsMaX2agrne9L3HIxoPf3SCXqb3FtrfQ");
 
         try {
             applicationDefault.refreshToken();
