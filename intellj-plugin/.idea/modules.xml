@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/hackzurich.iml" filepath="$PROJECT_DIR$/hackzurich.iml" />
+      <module fileurl="file://$PROJECT_DIR$/intellj-plugin.iml" filepath="$PROJECT_DIR$/intellj-plugin.iml" />
     </modules>
   </component>
 </project>
