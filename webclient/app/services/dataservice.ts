@@ -35,7 +35,16 @@ export class DataService {
 
     public GetLiveStepDiffs = (): Observable<StepDiff[]> => {
         let fiveMinutes = Math.floor(Date.now()/1000) - 60*1;
-        let actionUrl = this.server + 'datapoints/step_diffs/?format=json&created_at_gte='+fiveMinutes;
+        return this.getDiffsForTime(fiveMinutes)
+    }
+
+    public GetStepDiffsForToday = (): Observable<StepDiff[]> => {
+        let day = Math.floor(Date.now()/1000) - 24*60*60;
+        return this.getDiffsForTime(day)
+    }
+
+    private getDiffsForTime = (time): Observable<StepDiff[]> => {
+        let actionUrl = this.server + 'datapoints/step_diffs/?format=json&created_at_gte='+time;
         return this._http.get(actionUrl)
             .map((response: Response) => <StepDiff[]> response.json().results)
     }
