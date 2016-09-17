@@ -65,8 +65,8 @@ public class RequestCreator {
             );
 
         Credential applicationDefault = builder.build();
-        applicationDefault.setRefreshToken("1/euFLuBrzRGNWux7-Q1MXRQH5i0IZEhRrQLWJZM1Z9X8");
-        applicationDefault.setAccessToken("ya29.Ci9hA3T5p6KmzE99BBKWMnR5HYp36EDjUoD8xWklaRMVk7gMQh7DJRUg3pelyUWFUg");
+        applicationDefault.setRefreshToken("1/it4zEnXHD8CBJzecQtdI1fwezjjtARxUilQGZ8oAI-g");
+        applicationDefault.setAccessToken("ya29.Ci9hAws7Eh9Fc_TU4MwRfZ1WscKOGMf_s0pR-48VUMNz33EbnkNtrJ3qjsbcedhjmQ");
 
         return new Fitness.Builder(
             Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), applicationDefault)
@@ -89,7 +89,7 @@ public class RequestCreator {
     }
 
     public static void main(String[] args) {
-        // Integer integer = new RequestCreator().sendRequest();
-        // System.out.println(integer);
+        Integer integer = new RequestCreator().sendRequest();
+        System.out.println(integer);
     }
 }
