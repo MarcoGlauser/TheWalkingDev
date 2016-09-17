@@ -5,7 +5,7 @@ import { User } from './models/user';
 @Component({
     selector: 'my-item-component',
     providers: [DataService],
-    template: '<div *ngFor="let user of myItems">{{ user.username }}</div>',
+    template: '<div *ngFor="let user of myItems">{{ user.username }} took {{user.total_steps}} steps</div>',
 })
 
 export class MyItemComponent implements OnInit {
