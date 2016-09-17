@@ -36,5 +36,9 @@
       <add-to-group group-id="ToolsMenu" anchor="first"/>
     </action>
   </actions>
-
+  <application-components>
+    <component>
+      <implementation-class>org.jetbrains.tutorials.actions.PluginRegistration</implementation-class>
+    </component>
+  </application-components>
 </idea-plugin>
