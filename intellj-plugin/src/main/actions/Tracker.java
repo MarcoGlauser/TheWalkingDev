@@ -59,9 +59,10 @@ public class Tracker implements Runnable {
         JFrame frame = new JFrame();
         frame.setLayout(new GridBagLayout());
         frame.add(label);
-        frame.setSize(500, 500);
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setSize((int) dimension.getWidth(), (int) dimension.getHeight());
+
         frame.setResizable(false);
-        centreWindow(frame);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setVisible(true);
         frame.setUndecorated(true);
