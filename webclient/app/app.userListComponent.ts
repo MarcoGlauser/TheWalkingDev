@@ -15,7 +15,7 @@ import {StepDiff} from "./models/step_diff";
                             <div class="center-block text-center bs-callout bs-callout-primary"><h4>{{totalSteps}}</h4> <span class="subdesc">Total steps</span></div>
                         </div>
                         <div class="row">
-                            <div class="center-block text-center bs-callout bs-callout-primary"><h4>1337</h4> <span class="subdesc">steps Today</span></div>
+                            <div class="center-block text-center bs-callout bs-callout-primary"><h4>{{dailySteps}}</h4> <span class="subdesc">steps Today</span></div>
                         </div>
                     </div>
                 </div>
@@ -59,13 +59,31 @@ export class MyItemComponent implements OnInit {
     public activeUsers: User [] = [];
     public activeIds:number[] = [];
     public totalSteps:number = 0;
+    public dailySteps: number = 0;
 
     constructor(private _dataService: DataService) { }
 
     ngOnInit() {
         this.getAllItems();
         setInterval(() => {this.getActiveUsers();}, 2000);
+        setInterval(() => {this.getTodaysSteps();}, 2000);
+    }
 
+    private getTodaysSteps(): void {
+        let self = this;
+        this._dataService
+            .GetStepDiffsForToday()
+            .subscribe((diffs:StepDiff[]) => {
+                    let sum = 0;
+                    for (let diff of diffs) {
+                        sum += diff.number_of_steps
+                    }
+                    self.dailySteps = sum;
+                },
+                error => console.log(error),
+                () => {
+                    console.log('Get all Items complete')
+                });
     }
 
     private updateUsers(): void {
