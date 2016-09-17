@@ -2,14 +2,26 @@ body{
     font-family: 'Raleway', sans-serif;
     font-size: 20pt;
 }
+
+@font-face {
+    font-family: myFirstFont;
+    src: url(../font/DeadKansas.ttf);
+}
+
 .subdesc{
     font-size: 16pt;
 }
 h1{
-    font-family: 'Yatra One', cursive;
+    font-family: 'Yatra One', sans-serif;
     padding-left: 10px;
     padding-top:10px;
     font-size: 48pt;
+}
+h1 small{
+    font-family: 'Yatra One', sans-serif;
+}
+h1 img{
+    height:68px;
 }
 h4{
     font-size: 26pt;
@@ -34,4 +46,10 @@ h4{
 .progress{
     box-shadow: none;
     background-color:transparent;
+    border-radius: 3px;
 }
+
+.progress-bar{
+    font-size: 12pt;
+}
+

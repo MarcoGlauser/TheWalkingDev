@@ -29,7 +29,7 @@ import {StepDiff} from "./models/step_diff";
                         </div>
                         <div class="progress">
                             <div class="progress-bar progress-bar-success  " [ngClass]="{'active': !activeIds.indexOf(user.id),'progress-bar-striped':!activeIds.indexOf(user.id)}" role="progressbar" [ngStyle]="{'width': user.step_percentage+'%'}" >
-                                {{ user.total_steps }}
+                                {{ user.total_steps }} steps
                             </div>
                         </div>
                         
