@@ -26,7 +26,7 @@ export class MyItemComponent implements OnInit {
             this._dataService
                 .GetSingle(user.id)
                 .subscribe((data:User) => {
-                        user = data
+                        user.total_steps = data.total_steps
                     },
                     error => console.log(error),
                     () => console.log('Get all Items complete'));
