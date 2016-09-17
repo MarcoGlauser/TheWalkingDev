@@ -1,14 +1,9 @@
 package main.actions;
 
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.joda.time.DateTime;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -81,15 +76,18 @@ public class Tracker implements Runnable {
         String appKey = "a7eqv3s8aomqh5hfwiziv94a69ww45";
         String userKey = "ufzb39246jvwofzdspvb5pefubjxjq";
 
+
+        /*
         try {
             Unirest.post("https://api.pushover.net/1/messages.jso")
-                    .field("token", appKey)
-                    .field("user", userKey)
-                    .field("title", "Back to work")
-                    .field("message", "Hey buddy wanna take a break?")
-                    .asBinary();
+                .field("token", appKey)
+                .field("user", userKey)
+                .field("title", "Back to work")
+                .field("message", "Hey buddy wanna take a break?")
+                .asBinary();
         } catch (UnirestException e) {
             e.printStackTrace();
         }
+        */
     }
 }
