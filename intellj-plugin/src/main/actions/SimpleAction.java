@@ -84,6 +84,7 @@ public class SimpleAction extends AnAction {
 
                     if (diff >= THREASHOLD) {
                         SwingUtilities.invokeLater(() -> {
+
                             showMessage(statusBar, "Finished back, go back to to work. Be awesome.");
 
                             try {
