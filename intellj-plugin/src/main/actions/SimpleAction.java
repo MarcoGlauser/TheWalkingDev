@@ -10,7 +10,6 @@ import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +37,7 @@ public class SimpleAction extends AnAction {
             System.out.println("After 10s");
 
             JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself");
+
             JFrame yourFrame = new JFrame();
             yourFrame.setLayout(new GridBagLayout());
             yourFrame.add(label);
@@ -79,10 +79,28 @@ public class SimpleAction extends AnAction {
             yourFrame.setVisible(true);
             yourFrame.setUndecorated(true);
             yourFrame.toFront();
+            ;
             return null;
         };
 
         exec.schedule(objectCallable, 10, TimeUnit.SECONDS);
+    }
+
+    private void sendPushOrGoHome() {
+
+        String appKey = "a7eqv3s8aomqh5hfwiziv94a69ww45";
+        String userKey = "ufzb39246jvwofzdspvb5pefubjxjq";
+
+        try {
+            Unirest.post("https://api.pushover.net/1/messages.jso")
+                .field("token", appKey)
+                .field("user", userKey)
+                .field("title", "Back to work")
+                .field("message", "Hey buddy wanna take a break?")
+                .asBinary();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showMessage(StatusBar statusBar, String s) {

@@ -61,16 +61,15 @@ public class RequestCreator {
             .setTransport(new ApacheHttpTransport())
             .setClientSecrets(
                 "953621258938-te4scnmnukcj23m778hq2p2bhsbrf74t.apps.googleusercontent.com",
-                "HNSm0ENFLQHRpZzI3n_dz2XV"
+                "rh9WS0DnNujfrrwCXdb2JMKc"
             );
 
         Credential applicationDefault = builder.build();
-        applicationDefault.setRefreshToken("1/it4zEnXHD8CBJzecQtdI1fwezjjtARxUilQGZ8oAI-g");
-        applicationDefault.setAccessToken("ya29.Ci9hAws7Eh9Fc_TU4MwRfZ1WscKOGMf_s0pR-48VUMNz33EbnkNtrJ3qjsbcedhjmQ");
+        applicationDefault.setAccessToken("1/21pYiZJ0H4nimhL1pL-R1dyOGhGv_eq3E4Fngq2LdAg");
+        applicationDefault.setRefreshToken("ya29.Ci9hA-EtOfdi3VaHyXqO05Q43oCBLTcuf2StoUAgVSTC4MTa4IaFMDHCYTqVc9YmyA");
 
-        return new Fitness.Builder(
-            Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), applicationDefault)
-            .setApplicationName("953621258938-te4scnmnukcj23m778hq2p2bhsbrf74t.apps.googleusercontent.com")
+        return new Fitness.Builder(Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), applicationDefault)
+            .setApplicationName("ItelliJ-Tool")
             .build();
     }
 
