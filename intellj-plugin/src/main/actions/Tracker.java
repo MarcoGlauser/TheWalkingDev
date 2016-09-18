@@ -2,10 +2,13 @@ package main.actions;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.joda.time.DateTime;
+import org.joda.time.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -22,9 +25,10 @@ public class Tracker implements Runnable {
     private final TheWalkingDevAPI.UserData userData;
 
     public Tracker() {
-        userData = TheWalkingDevAPI.getUserIdByName("Tim");
+        userData = TheWalkingDevAPI.getUserIdByName("Kiru");
         userId = userData.id;
         requestCreator = new RequestCreator(userData.refreshToken);
+        System.out.println(userData.id);
     }
 
     @Override
@@ -33,15 +37,16 @@ public class Tracker implements Runnable {
 
         JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself!");
         JFrame frame = displayLock(label);
-        DateTime startTime = DateTime.now().minusDays(1);
-        previous = initial = requestCreator.sendRequest(startTime);
+
+        Instant start = Instant.now();
+        previous = initial = requestCreator.sendRequest(start);
         System.out.println(new DateTime() + " Initial, got " + initial);
 
         AtomicBoolean isFinished = new AtomicBoolean(false);
         TrackerSchedular.scheduleAtFixedRate(() -> {
             if (!isFinished.get()) {
                 SwingUtilities.invokeLater(frame::toFront);
-                Integer now = requestCreator.sendRequest(startTime);
+                Integer now = requestCreator.sendRequest(start);
 
                 System.out.println(new DateTime() + " Check again, got " + now);
                 Integer diff = now - previous;

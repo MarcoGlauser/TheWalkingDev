@@ -10,6 +10,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.LocalDateTime;
 import org.json.JSONException;
 
 import javax.net.ssl.SSLContext;
@@ -18,6 +20,10 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 
 /**
  * @author Kirusanth Poopalasingam ( pkirusanth@gmail.com )
@@ -55,14 +61,18 @@ public class RequestCreator {
         return unsafeHttpClient;
     }
 
-    public Integer sendRequest(DateTime startTime) {
+    public Integer sendRequest(Instant startTime) {
         Unirest.setHttpClient(unsafeHttpClient);
 
         System.out.println("sendRequest");
-        DateTime endTime = DateTime.now().plusDays(1);
+        long end = Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli();
         System.out.println("after start end");
 
         try {
+            long diff = (end - startTime.toEpochMilli());
+            long start = startTime.toEpochMilli();
+            System.out.println("From " + start + " to " + end);
+
             HttpResponse<JsonNode> authorization = Unirest.post("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate")
                 .header("Content-Type", "application/json;encoding=utf-8")
                 .header("Authorization", "Bearer " + accessToken)
@@ -71,9 +81,9 @@ public class RequestCreator {
                     "    \"dataTypeName\": \"com.google.step_count.delta\",\n" +
                     "    \"dataSourceId\": \"derived:com.google.step_count.delta:com.google.android.gms:estimated_steps\"\n" +
                     "  }],\n" +
-                    "  \"bucketByTime\": { \"durationMillis\": " + endTime.minus(startTime.getMillis()).getMillis() + " },\n" +
-                    "  \"startTimeMillis\": " + startTime.getMillis() + ",\n" +
-                    "  \"endTimeMillis\": " + endTime.getMillis() + "\n" +
+                    "  \"bucketByTime\": { \"durationMillis\": " + diff + " },\n" +
+                    "  \"startTimeMillis\": " + start + ",\n" +
+                    "  \"endTimeMillis\": " + end + "\n" +
                     "}")
                 .asJson();
             System.out.println("Got json");
@@ -117,4 +127,5 @@ public class RequestCreator {
             throw new RuntimeException(e);
         }
     }
+
 }
