@@ -1,12 +1,5 @@
 package main.actions;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.util.Utils;
-import com.google.api.client.http.apache.ApacheHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.fitness.Fitness;
-import com.google.api.services.fitness.model.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -16,28 +9,28 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
+import org.json.JSONException;
 
 import javax.net.ssl.SSLContext;
-import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Collections;
 
 /**
  * @author Kirusanth Poopalasingam ( pkirusanth@gmail.com )
  */
 public class RequestCreator {
 
-    private final Fitness service;
+
+    // private final Fitness service;
     private static String accessToken;
 
     public RequestCreator() {
-        service = createService();
+        Unirest.setHttpClient(unsafeHttpClient);
+        refreshAccessToken();
     }
 
     private static CloseableHttpClient unsafeHttpClient;
@@ -82,89 +75,51 @@ public class RequestCreator {
                     "  \"endTimeMillis\": " + endTime.getMillis() + "\n" +
                     "}")
                 .asJson();
-            int value = authorization.getBody()
-                .getObject()
-                .getJSONArray("bucket")
-                .getJSONObject(0)
-                .getJSONArray("dataset")
-                .getJSONObject(0)
-                .getJSONArray("point")
-                .getJSONObject(0)
-                .getJSONArray("value")
-                .getJSONObject(0)
-                .getInt("intVal");
+            int value = 0;
+            try {
+                value = authorization.getBody()
+                    .getObject()
+                    .getJSONArray("bucket")
+                    .getJSONObject(0)
+                    .getJSONArray("dataset")
+                    .getJSONObject(0)
+                    .getJSONArray("point")
+                    .getJSONObject(0)
+                    .getJSONArray("value")
+                    .getJSONObject(0)
+                    .getInt("intVal");
+            } catch (JSONException e) {
+                System.out.println(authorization.getBody().toString());
+                return 0;
+            }
             return value;
         } catch (UnirestException e) {
-            e.printStackTrace();
+            return 0;
         }
-
-        return 0;
     }
 
-    private Integer careless() throws IOException {
-        DateTime startTime = DateTime.now().minusDays(1);
-        DateTime endTime = DateTime.now().plusDays(1);
-        Fitness.Users.Dataset.Aggregate aggregate = service.users().dataset().aggregate(
-            "me",
-            new AggregateRequest()
-                .setStartTimeMillis(startTime.getMillis())
-                .setEndTimeMillis(endTime.getMillis())
-                .setAggregateBy(Collections.singletonList(
-                    new AggregateBy()
-                        .setDataSourceId("derived:com.google.step_count.delta:com.google.android.gms:estimated_steps")
-                ))
-                .setBucketByTime(
-                    new BucketByTime()
-                        .setDurationMillis(endTime.minus(startTime.getMillis()).getMillis())
-                )
-        );
-        AggregateResponse response = aggregate.execute();
-        Integer value = getValueOrNul(response);
-        return value;
-    }
+    private void refreshAccessToken() {
 
-    @NotNull
-    private static Fitness createService() {
-        GoogleCredential.Builder builder = new GoogleCredential.Builder()
-            .setJsonFactory(new JacksonFactory())
-            .setTransport(new ApacheHttpTransport())
-            .setClientSecrets(
-                "953621258938-te4scnmnukcj23m778hq2p2bhsbrf74t.apps.googleusercontent.com",
-                "rh9WS0DnNujfrrwCXdb2JMKc"
-            );
-
-        Credential applicationDefault = builder.build();
-        applicationDefault.setRefreshToken("1/ocvAqbXjm-dnsMaX2agrne9L3HIxoPf3SCXqb3FtrfQ");
+        String clientId = "953621258938-te4scnmnukcj23m778hq2p2bhsbrf74t.apps.googleusercontent.com";
+        String secret = "rh9WS0DnNujfrrwCXdb2JMKc";
+        String refreshToken = "1/ocvAqbXjm-dnsMaX2agrne9L3HIxoPf3SCXqb3FtrfQ";
 
         try {
-            applicationDefault.refreshToken();
-        } catch (IOException e) {
-            e.printStackTrace();
+            HttpResponse<JsonNode> stringHttpResponse = Unirest.post("https://www.googleapis.com/oauth2/v4/token")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .body("client_secret=" + secret + "&grant_type=refresh_token&refresh_token=" + refreshToken + "&client_id=" + clientId)
+                .asJson();
+
+            accessToken = stringHttpResponse.getBody().getObject().getString("access_token");
+            System.out.println(accessToken);
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
         }
-
-        accessToken = applicationDefault.getAccessToken();
-
-        return new Fitness.Builder(Utils.getDefaultTransport(), Utils.getDefaultJsonFactory(), applicationDefault)
-            .setApplicationName("ItelliJ-Tool")
-            .build();
-    }
-
-    private static Integer getValueOrNul(AggregateResponse response) {
-        System.out.println(response);
-        for (AggregateBucket aggregateBucket : response.getBucket()) {
-            for (Dataset dataset : aggregateBucket.getDataset()) {
-                for (DataPoint dataPoint : dataset.getPoint()) {
-                    for (Value value : dataPoint.getValue()) {
-                        return value.getIntVal();
-                    }
-                }
-            }
-        }
-        return 0;
     }
 
     public static void main(String[] args) {
-        Integer integer = new RequestCreator().sendRequest();
+        RequestCreator requestCreator = new RequestCreator();
+        Integer integer = requestCreator.sendRequest();
         System.out.println(integer);
     }
 }
