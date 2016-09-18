@@ -5,6 +5,7 @@ class AppUser(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     username = models.CharField(max_length=256)
     refresh_token = models.CharField(max_length=256)
+    push_token = models.CharField(max_length=256)
 
     def __str__(self):
         return self.username

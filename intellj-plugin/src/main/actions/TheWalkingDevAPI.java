@@ -25,14 +25,16 @@ public class TheWalkingDevAPI {
     public static int getUserIdByName(String username) {
         try {
 
-            HttpResponse<JsonNode> jsonRespones = Unirest.get(BASE_URL + "/users/users?format=json")
+            HttpResponse<String> jsonRespones = Unirest.get(BASE_URL + "/users/users?format=json")
                 .header("accept", "application/json")
                 .queryString("username", username)
-                .asJson();
+                .asString();
 
-            JSONObject json = jsonRespones.getBody().getObject();
-            int id = json.getJSONArray("results").getJSONObject(0).getInt("id");
-            return id;
+            System.out.println(jsonRespones.getBody());
+
+            /*JSONObject json = jsonRespones.getBody().getObject();
+            int id = json.getJSONArray("results").getJSONObject(0).getInt("id");*/
+            return 1;
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
