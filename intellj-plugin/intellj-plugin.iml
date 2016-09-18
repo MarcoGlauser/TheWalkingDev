@@ -56,5 +56,6 @@
     </orderEntry>
     <orderEntry type="library" name="joda-time:joda-time:2.9.4" level="project" />
     <orderEntry type="library" name="com.google.apis:google-api-services-fitness:v1-rev21-1.22.0" level="project" />
+    <orderEntry type="library" name="com.github.sps.pushover.net:pushover-client:1.0.0" level="project" />
   </component>
 </module>

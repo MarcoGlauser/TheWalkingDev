@@ -89,7 +89,7 @@ public class RequestCreator {
     }
 
     public static void main(String[] args) {
-        Integer integer = new RequestCreator().sendRequest();
-        System.out.println(integer);
+        // Integer integer = new RequestCreator().sendRequest();
+        // System.out.println(integer);
     }
 }
