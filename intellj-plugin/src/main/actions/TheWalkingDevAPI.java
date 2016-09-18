@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequest;
 import org.json.JSONObject;
 import org.omg.PortableServer.THREAD_POLICY_ID;
 
@@ -12,7 +13,8 @@ import org.omg.PortableServer.THREAD_POLICY_ID;
  */
 public class TheWalkingDevAPI {
 
-    public static final String BASE_URL = "http://172.31.5.34:8000";
+    // public static final String BASE_URL = "http://172.31.5.34:8000";
+    public static final String BASE_URL = "http://172.31.6.187:8000/";
 
     /* public static JSONObject getUserById(int userId) throws UnirestException {
                 HttpResponse<JsonNode> response = Unirest.get("http://localhost:8000/users/users/" + userId + "?format=json")
@@ -22,17 +24,29 @@ public class TheWalkingDevAPI {
                 return response.getBody().getObject();
             }
         */
-    public static int getUserIdByName(String username) {
+
+    static class UserData {
+        public int id;
+        public String refreshToken;
+        public String pushToken;
+    }
+
+    public static UserData getUserIdByName(String username) {
         try {
 
-            HttpResponse<JsonNode> jsonRespones = Unirest.get(BASE_URL + "/users/users?format=json")
+            System.out.println("getUserIdByName");
+            HttpRequest httpRequest = Unirest.get(BASE_URL + "/users/users?format=json")
                 .header("accept", "application/json")
-                .queryString("username", username)
-                .asJson();
+                .queryString("username", username);
+            System.out.println(httpRequest.asString().getBody());
+            HttpResponse<JsonNode> jsonRespones = httpRequest .asJson();
 
             JSONObject json = jsonRespones.getBody().getObject();
-            int id = json.getJSONArray("results").getJSONObject(0).getInt("id");
-            return id;
+            UserData userData = new UserData();
+            userData.id = json.getJSONArray("results").getJSONObject(0).getInt("id");
+            userData.refreshToken = json.getJSONArray("results").getJSONObject(0).getString("refresh_token");
+            userData.pushToken = json.getJSONArray("results").getJSONObject(0).getString("push_token");
+            return userData;
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
@@ -58,19 +72,6 @@ public class TheWalkingDevAPI {
                 .asJson();
         } catch (UnirestException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        for (int i = 0; i< 10; i++) {
-            int id = getUserIdByName("kiru");
-            logSteps(id, 300);
-            System.out.println(id);
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

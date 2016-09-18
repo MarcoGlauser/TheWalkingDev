@@ -1,10 +1,13 @@
 package main.actions;
 
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.joda.time.DateTime;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by tim on 9/17/16.
@@ -15,10 +18,12 @@ public class Tracker implements Runnable {
     private RequestCreator requestCreator;
     private Integer initial;
     private int userId = 0;
+    private final TheWalkingDevAPI.UserData userData;
 
     public Tracker() {
-        userId = TheWalkingDevAPI.getUserIdByName("tim");
-        requestCreator = new RequestCreator();
+        userData = TheWalkingDevAPI.getUserIdByName("Kiru");
+        userId = userData.id;
+        requestCreator = new RequestCreator(userData.refreshToken);
     }
 
     @Override
@@ -44,6 +49,7 @@ public class Tracker implements Runnable {
             if (diff >= THREASHOLD) {
                 SwingUtilities.invokeLater(() -> {
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    sendPushOrGoHome();
                 });
             }
         }, 0, 2, TimeUnit.SECONDS);
@@ -52,15 +58,17 @@ public class Tracker implements Runnable {
     private JFrame displayLock() {
         JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself!");
         JFrame frame = new JFrame();
-        frame.setLayout(new GridBagLayout());
-        frame.add(label);
-        frame.setSize(500, 500);
-        frame.setResizable(false);
-        centreWindow(frame);
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.setVisible(true);
-        frame.setUndecorated(true);
-        frame.toFront();
+        SwingUtilities.invokeLater(() -> {
+            frame.setLayout(new GridBagLayout());
+            frame.add(label);
+            frame.setSize(500, 500);
+            frame.setResizable(false);
+            centreWindow(frame);
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            frame.setVisible(true);
+            frame.setUndecorated(true);
+            frame.toFront();
+        });
         return frame;
     }
 
@@ -73,20 +81,16 @@ public class Tracker implements Runnable {
 
     private void sendPushOrGoHome() {
         String appKey = "a7eqv3s8aomqh5hfwiziv94a69ww45";
-        String userKey = "ufzb39246jvwofzdspvb5pefubjxjq";
 
-
-        /*
         try {
             Unirest.post("https://api.pushover.net/1/messages.jso")
                 .field("token", appKey)
-                .field("user", userKey)
+                .field("user", userData.pushToken)
                 .field("title", "Back to work")
                 .field("message", "Hey buddy wanna take a break?")
                 .asBinary();
         } catch (UnirestException e) {
             e.printStackTrace();
         }
-        */
     }
 }

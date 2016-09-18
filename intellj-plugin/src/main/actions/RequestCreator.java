@@ -28,9 +28,9 @@ public class RequestCreator {
     // private final Fitness service;
     private static String accessToken;
 
-    public RequestCreator() {
+    public RequestCreator(String refreshToken) {
         Unirest.setHttpClient(unsafeHttpClient);
-        refreshAccessToken();
+        refreshAccessToken(refreshToken);
     }
 
     private static CloseableHttpClient unsafeHttpClient;
@@ -58,8 +58,10 @@ public class RequestCreator {
     public Integer sendRequest() {
         Unirest.setHttpClient(unsafeHttpClient);
 
+        System.out.println("sendRequest");
         DateTime startTime = DateTime.now().minusDays(1);
         DateTime endTime = DateTime.now().plusDays(1);
+        System.out.println("after start end");
 
         try {
             HttpResponse<JsonNode> authorization = Unirest.post("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate")
@@ -75,8 +77,10 @@ public class RequestCreator {
                     "  \"endTimeMillis\": " + endTime.getMillis() + "\n" +
                     "}")
                 .asJson();
+            System.out.println("Got json");
             int value = 0;
             try {
+                System.out.println("get response");
                 value = authorization.getBody()
                     .getObject()
                     .getJSONArray("bucket")
@@ -89,7 +93,6 @@ public class RequestCreator {
                     .getJSONObject(0)
                     .getInt("intVal");
             } catch (JSONException e) {
-                System.out.println(authorization.getBody().toString());
                 return 0;
             }
             return value;
@@ -98,11 +101,10 @@ public class RequestCreator {
         }
     }
 
-    private void refreshAccessToken() {
+    private void refreshAccessToken(String refreshToken) {
 
         String clientId = "953621258938-te4scnmnukcj23m778hq2p2bhsbrf74t.apps.googleusercontent.com";
         String secret = "rh9WS0DnNujfrrwCXdb2JMKc";
-        String refreshToken = "1/ocvAqbXjm-dnsMaX2agrne9L3HIxoPf3SCXqb3FtrfQ";
 
         try {
             HttpResponse<JsonNode> stringHttpResponse = Unirest.post("https://www.googleapis.com/oauth2/v4/token")
@@ -115,11 +117,5 @@ public class RequestCreator {
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static void main(String[] args) {
-        RequestCreator requestCreator = new RequestCreator();
-        Integer integer = requestCreator.sendRequest();
-        System.out.println(integer);
     }
 }
