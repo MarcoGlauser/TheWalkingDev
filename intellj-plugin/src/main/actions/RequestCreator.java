@@ -55,11 +55,10 @@ public class RequestCreator {
         return unsafeHttpClient;
     }
 
-    public Integer sendRequest() {
+    public Integer sendRequest(DateTime startTime) {
         Unirest.setHttpClient(unsafeHttpClient);
 
         System.out.println("sendRequest");
-        DateTime startTime = DateTime.now().minusDays(1);
         DateTime endTime = DateTime.now().plusDays(1);
         System.out.println("after start end");
 

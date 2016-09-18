@@ -17,11 +17,12 @@ public class Tracker implements Runnable {
 
     private RequestCreator requestCreator;
     private Integer initial;
+    private Integer previous;
     private int userId = 0;
     private final TheWalkingDevAPI.UserData userData;
 
     public Tracker() {
-        userData = TheWalkingDevAPI.getUserIdByName("Kiru");
+        userData = TheWalkingDevAPI.getUserIdByName("Tim");
         userId = userData.id;
         requestCreator = new RequestCreator(userData.refreshToken);
     }
@@ -32,24 +33,24 @@ public class Tracker implements Runnable {
 
         JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself!");
         JFrame frame = displayLock(label);
-        initial = requestCreator.sendRequest();
+        DateTime startTime = DateTime.now().minusDays(1);
+        previous = initial = requestCreator.sendRequest(startTime);
         System.out.println(new DateTime() + " Initial, got " + initial);
 
         AtomicBoolean isFinished = new AtomicBoolean(false);
         TrackerSchedular.scheduleAtFixedRate(() -> {
             if (!isFinished.get()) {
-                System.out.println(new DateTime() + " Check again ");
                 SwingUtilities.invokeLater(frame::toFront);
-
-                Integer now = requestCreator.sendRequest();
+                Integer now = requestCreator.sendRequest(startTime);
 
                 System.out.println(new DateTime() + " Check again, got " + now);
-                Integer diff = now - initial;
+                Integer diff = now - previous;
+                previous = now;
                 if (diff > 0) {
                     TheWalkingDevAPI.logSteps(userId, diff);
                 }
 
-                if (diff >= THREASHOLD) {
+                if ((now - initial)>= THREASHOLD) {
                     SwingUtilities.invokeLater(() -> {
                         isFinished.set(true);
                         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,7 +96,7 @@ public class Tracker implements Runnable {
                 .field("token", appKey)
                 .field("user", userData.pushToken)
                 .field("title", "Back to work")
-                .field("message", "Hey buddy wanna take a break?")
+                .field("message", "You're break is over. Head back.")
                 .asBinary();
         } catch (UnirestException e) {
             e.printStackTrace();
