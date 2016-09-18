@@ -29,7 +29,7 @@
   </extensions>
 
   <actions>
-    <action id="org.jetbrains.tutorials.actions.SimpleAction" class="org.jetbrains.tutorials.actions.SimpleAction"
+    <action id="main.actions.SimpleAction" class="main.actions.SimpleAction"
             text="The Walking Devs" description="IntelliJ Action System Demo">
       <keyboard-shortcut first-keystroke="control alt A" second-keystroke="C" keymap="$default"/>
       <mouse-shortcut keystroke="control button3 doubleClick" keymap="$default"/>
@@ -38,7 +38,7 @@
   </actions>
   <application-components>
     <component>
-      <implementation-class>org.jetbrains.tutorials.actions.PluginRegistration</implementation-class>
+      <implementation-class>main.actions.PluginRegistration</implementation-class>
     </component>
   </application-components>
 </idea-plugin>
