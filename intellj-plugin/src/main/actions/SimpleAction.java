@@ -9,10 +9,6 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.awt.RelativePoint;
-import net.pushover.client.PushoverClient;
-import net.pushover.client.PushoverException;
-import net.pushover.client.PushoverMessage;
-import net.pushover.client.PushoverRestClient;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,6 +66,7 @@ public class SimpleAction extends AnAction {
 
                             showMessage(statusBar, "Finished back, go back to to work. Be awesome.");
 
+                            /*
                             try {
                                 PushoverClient client = new PushoverRestClient();
                                 client.pushMessage(PushoverMessage.builderWithApiToken("a7eqv3s8aomqh5hfwiziv94a69ww45")
@@ -79,6 +76,7 @@ public class SimpleAction extends AnAction {
                             } catch (PushoverException e) {
                                 e.printStackTrace();
                             }
+                            */
 
                         });
                     }
