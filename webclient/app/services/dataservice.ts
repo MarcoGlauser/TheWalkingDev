@@ -14,7 +14,7 @@ export class DataService {
 
     constructor(private _http: Http) {
 
-        this.server = 'http://localhost:8000/'
+        this.server = 'http://172.31.5.34:8000/'
         this.actionUrl = this.server + 'users/users/?format=json';
 
         this.headers = new Headers();
@@ -34,7 +34,7 @@ export class DataService {
     }
 
     public GetLiveStepDiffs = (): Observable<StepDiff[]> => {
-        let fiveMinutes = Math.floor(Date.now()/1000) - 60*5;
+        let fiveMinutes = Math.floor(Date.now()/1000) - 60*1;
         let actionUrl = this.server + 'datapoints/step_diffs/?format=json&created_at_gte='+fiveMinutes;
         return this._http.get(actionUrl)
             .map((response: Response) => <StepDiff[]> response.json().results)

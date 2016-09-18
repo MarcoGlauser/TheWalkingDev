@@ -1,0 +1,37 @@
+body{
+    font-family: 'Raleway', sans-serif;
+    font-size: 20pt;
+}
+.subdesc{
+    font-size: 16pt;
+}
+h1{
+    font-family: 'Yatra One', cursive;
+    padding-left: 10px;
+    padding-top:10px;
+    font-size: 48pt;
+}
+h4{
+    font-size: 26pt;
+}
+.page-header{
+    border-bottom: 0px;
+}
+#loading{
+    height: 400px;
+}
+.person_icon{
+    height:64px;
+}
+.person{
+    padding-left: 20px;
+}
+
+#generalStats .container-fluid{
+    padding:0px;
+}
+
+.progress{
+    box-shadow: none;
+    background-color:transparent;
+}
