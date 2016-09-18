@@ -21,11 +21,7 @@ public class Tracker implements Runnable {
     private int userId = 0;
 
     public Tracker() {
-        try {
-            userId = TheWalkingDevAPI.getUserByName("tim").getInt("id");
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
+        userId = TheWalkingDevAPI.getUserIdByName("tim");
         requestCreator = new RequestCreator();
         initial = requestCreator.sendRequest();
         System.out.println("Initial, got" + initial);
@@ -40,11 +36,7 @@ public class Tracker implements Runnable {
             System.out.println("Check again, got " + now);
             Integer diff = now - initial;
             if (diff > 0) {
-                try {
-                    TheWalkingDevAPI.logSteps(userId, diff);
-                } catch (UnirestException e) {
-                    e.printStackTrace();
-                }
+                TheWalkingDevAPI.logSteps(userId, diff);
             }
 
             if (diff >= THREASHOLD) {
