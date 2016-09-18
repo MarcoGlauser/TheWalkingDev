@@ -18,7 +18,7 @@ public class PluginRegistration implements ApplicationComponent {
 
     // this method is called on IDEA start-up.
     public void initComponent() {
-        TrackerSchedular.scheduleAtFixedRate(new Tracker(), 0, 1, TimeUnit.HOURS);
+        TrackerSchedular.scheduleAtFixedRate(new Tracker(), 1, 1, TimeUnit.HOURS);
     }
 
     // Disposes system resources.

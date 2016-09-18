@@ -2,6 +2,7 @@ package main.actions;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.joda.time.DateTime;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,17 +24,23 @@ public class Tracker implements Runnable {
     public Tracker() {
         userId = TheWalkingDevAPI.getUserIdByName("tim");
         requestCreator = new RequestCreator();
-        initial = requestCreator.sendRequest();
-        System.out.println("Initial, got" + initial);
     }
 
     @Override
     public void run() {
-        JFrame frame = displayLock();
+        System.out.println(new DateTime() + " Show message ");
 
-        TrackerSchedular.scheduleAtFixedRate((Runnable) () -> {
+        JFrame frame = displayLock();
+        initial = requestCreator.sendRequest();
+        System.out.println(new DateTime() + " Initial, got " + initial);
+
+        TrackerSchedular.scheduleAtFixedRate(() -> {
+            System.out.println(new DateTime() + " Check again ");
+            SwingUtilities.invokeLater(frame::toFront);
+
             Integer now = requestCreator.sendRequest();
-            System.out.println("Check again, got " + now);
+
+            System.out.println(new DateTime() + " Check again, got " + now);
             Integer diff = now - initial;
             if (diff > 0) {
                 TheWalkingDevAPI.logSteps(userId, diff);
@@ -48,7 +55,7 @@ public class Tracker implements Runnable {
     }
 
     private JFrame displayLock() {
-        JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself");
+        JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself!");
         JFrame frame = new JFrame();
         frame.setLayout(new GridBagLayout());
         frame.add(label);
