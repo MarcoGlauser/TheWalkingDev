@@ -1,4 +1,4 @@
-package org.jetbrains.tutorials.actions.src;
+package org.jetbrains.tutorials.actions;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
