@@ -34,11 +34,7 @@ public class SimpleAction extends AnAction {
         StatusBar statusBar = WindowManager.getInstance()
             .getStatusBar(DataKeys.PROJECT.getData(actionEvent.getDataContext()));
 
-        JBPopupFactory.getInstance()
-            .createHtmlTextBalloonBuilder("Take a break in 10s", MessageType.INFO, null)
-            .setFadeoutTime(7500)
-            .createBalloon()
-            .show(RelativePoint.getCenterOf(statusBar.getComponent()), Balloon.Position.atRight);
+        showMessage(statusBar, "Take a break in 10s");
 
         Callable<Object> objectCallable = () -> {
             System.out.println("After 10s");
@@ -66,6 +62,7 @@ public class SimpleAction extends AnAction {
                     System.out.println("Check again, got " + now);
                     if((now - initial) >= THREASHOLD){
                         yourFrame.dispose();
+                        showMessage(statusBar, "Finished back, go back to to work. Be awesome.");
                     }
                 }
             }, 0, 2, TimeUnit.SECONDS);
@@ -78,6 +75,14 @@ public class SimpleAction extends AnAction {
         };
 
         exec.schedule(objectCallable, 10, TimeUnit.SECONDS);
+    }
+
+    private void showMessage(StatusBar statusBar, String s) {
+        JBPopupFactory.getInstance()
+            .createHtmlTextBalloonBuilder(s, MessageType.INFO, null)
+            .setFadeoutTime(7500)
+            .createBalloon()
+            .show(RelativePoint.getCenterOf(statusBar.getComponent()), Balloon.Position.atRight);
     }
 
     public static void centreWindow(Window frame) {
