@@ -24,6 +24,7 @@ public class SimpleAction extends AnAction {
 
 
     ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+    private int THREASHOLD = 10;
 
     @Override
     public void actionPerformed(AnActionEvent actionEvent) {
@@ -34,30 +35,55 @@ public class SimpleAction extends AnAction {
             .getStatusBar(DataKeys.PROJECT.getData(actionEvent.getDataContext()));
 
         JBPopupFactory.getInstance()
-            .createHtmlTextBalloonBuilder("Take a break in 30s", MessageType.INFO, null)
+            .createHtmlTextBalloonBuilder("Take a break in 10s", MessageType.INFO, null)
             .setFadeoutTime(7500)
             .createBalloon()
             .show(RelativePoint.getCenterOf(statusBar.getComponent()), Balloon.Position.atRight);
 
         Callable<Object> objectCallable = () -> {
-            System.out.println("After 30s");
+            System.out.println("After 10s");
 
-            JLabel label = new JLabel("Take a break");
+            JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself");
 
             JFrame yourFrame = new JFrame();
             yourFrame.setLayout(new GridBagLayout());
             yourFrame.add(label);
 
-            yourFrame.setVisible(true);
+            yourFrame.setSize(500, 500);
             yourFrame.setResizable(false);
-            yourFrame.setExtendedState(yourFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            centreWindow(yourFrame);;
+
+            // new WindowsSecurity(yourFrame);
+            RequestCreator requestCreator = new RequestCreator();
+            System.out.println("Created RequestCreator()");
+            Integer initial = requestCreator.sendRequest();
+            System.out.println("Initial, got" + initial);
+
+            exec.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    Integer now = requestCreator.sendRequest();
+                    System.out.println("Check again, got " + now);
+                    if((now - initial) >= THREASHOLD){
+                        yourFrame.dispose();
+                    }
+                }
+            }, 0, 2, TimeUnit.SECONDS);
+
+            yourFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            yourFrame.setVisible(true);
             yourFrame.setUndecorated(true);
-
-            new WindowsSecurity(yourFrame);
-
+            yourFrame.toFront();;
             return null;
         };
 
-        exec.schedule(objectCallable, 30, TimeUnit.SECONDS);
+        exec.schedule(objectCallable, 10, TimeUnit.SECONDS);
+    }
+
+    public static void centreWindow(Window frame) {
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
     }
 }

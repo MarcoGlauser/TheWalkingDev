@@ -30,7 +30,7 @@
 
   <actions>
     <action id="org.jetbrains.tutorials.actions.SimpleAction" class="org.jetbrains.tutorials.actions.SimpleAction"
-            text="Simple Action" description="IntelliJ Action System Demo">
+            text="The Walking Devs" description="IntelliJ Action System Demo">
       <keyboard-shortcut first-keystroke="control alt A" second-keystroke="C" keymap="$default"/>
       <mouse-shortcut keystroke="control button3 doubleClick" keymap="$default"/>
       <add-to-group group-id="ToolsMenu" anchor="first"/>
