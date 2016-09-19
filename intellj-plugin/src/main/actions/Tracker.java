@@ -62,18 +62,20 @@ public class Tracker implements Runnable {
     }
 
     private JFrame displayLock(JLabel label) {
-        label.setFont(new Font("Arial", Font.BOLD, 20));
+        label.setFont(new Font("Arial", Font.BOLD, 15));
         JFrame frame = new JFrame();
         SwingUtilities.invokeLater(() -> {
-            frame.setLayout(new GridBagLayout());
-            frame.add(label);
-            frame.setSize(500, 500);
-            frame.setResizable(false);
-            centreWindow(frame);
-            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            frame.setVisible(true);
-            frame.setUndecorated(true);
-            frame.toFront();
+            try {
+                frame.setLayout(new GridBagLayout());
+                frame.add(label);
+                frame.setSize(500, 500);
+                frame.setResizable(false);
+                centreWindow(frame);
+                frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                frame.setVisible(true);
+                frame.setUndecorated(true);
+                frame.toFront();
+            } catch (Exception e) { }
         });
         return frame;
     }
