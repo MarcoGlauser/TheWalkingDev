@@ -30,33 +30,39 @@ public class Tracker implements Runnable {
     public void run() {
         System.out.println(new DateTime() + " Show message ");
 
-        JFrame frame = displayLock();
+        JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself!");
+        JFrame frame = displayLock(label);
         initial = requestCreator.sendRequest();
         System.out.println(new DateTime() + " Initial, got " + initial);
 
+        AtomicBoolean isFinished = new AtomicBoolean(false);
         TrackerSchedular.scheduleAtFixedRate(() -> {
-            System.out.println(new DateTime() + " Check again ");
-            SwingUtilities.invokeLater(frame::toFront);
+            if (!isFinished.get()) {
+                System.out.println(new DateTime() + " Check again ");
+                SwingUtilities.invokeLater(frame::toFront);
 
-            Integer now = requestCreator.sendRequest();
+                Integer now = requestCreator.sendRequest();
 
-            System.out.println(new DateTime() + " Check again, got " + now);
-            Integer diff = now - initial;
-            if (diff > 0) {
-                TheWalkingDevAPI.logSteps(userId, diff);
-            }
+                System.out.println(new DateTime() + " Check again, got " + now);
+                Integer diff = now - initial;
+                if (diff > 0) {
+                    TheWalkingDevAPI.logSteps(userId, diff);
+                }
 
-            if (diff >= THREASHOLD) {
-                SwingUtilities.invokeLater(() -> {
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    sendPushOrGoHome();
-                });
+                if (diff >= THREASHOLD) {
+                    SwingUtilities.invokeLater(() -> {
+                        isFinished.set(true);
+                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                        label. setText("Well done! Code on.");
+                        sendPushOrGoHome();
+                    });
+                }
             }
         }, 0, 2, TimeUnit.SECONDS);
     }
 
-    private JFrame displayLock() {
-        JLabel label = new JLabel("Take a break - Walk a few steps, then it'll unlock itself!");
+    private JFrame displayLock(JLabel label) {
+        label.setFont(new Font("Arial", Font.BOLD, 20));
         JFrame frame = new JFrame();
         SwingUtilities.invokeLater(() -> {
             frame.setLayout(new GridBagLayout());
